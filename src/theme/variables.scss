@@ -51,6 +51,17 @@
   --ion-color-danger-shade: #d33939;
   --ion-color-danger-tint: #f25454;
 
+
+  /** danger **/
+  //MY-TEST
+  --ion-color-danger2-soft: #dd186b;
+  --ion-color-danger2-rgb: 245, 61, 61;
+  --ion-color-danger2-contrast: #ffffff;
+  --ion-color-danger2-contrast-rgb: 255, 255, 255;
+  --ion-color-danger2-shade: #dd186b;
+  --ion-color-danger2-tint: #dd186b;
+  //MY-TEST
+
   /** dark **/
   --ion-color-dark: #222428;
   --ion-color-dark-rgb: 34, 34, 34;
@@ -74,4 +85,23 @@
   --ion-color-light-contrast-rgb: 0, 0, 0;
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
+
+
+  /** perro **/
+  --ion-color-perro: #dd186b;
+  --ion-color-perro-rgb: 244, 244, 244;
+  --ion-color-perro-contrast: #dd186b;
+  --ion-color-perro-contrast-rgb: 0, 0, 0;
+  --ion-color-perro-shade: #dd186b;
+  --ion-color-perro-tint: #dd186b;
+
+  $colors: (
+          perro: #dd186b
+  )
+
 }
+
+$colors: (
+  perro: #dd186b
+)
+

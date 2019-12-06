@@ -1,14 +1,58 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      Ionic Blank
+      SMS Notificaciones
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <div class="ion-padding">
-    The world is your oyster.
-    <p>If you get lost, the <a target="_blank" rel="noopener" href="https://ionicframework.com/docs/">docs</a> will be your guide.</p>
-  </div>
+<ion-content padding="true">
+  <ion-row>
+    <ion-col style="text-align: center">
+      <ion-button color="success" expand="block" shape="round" (click)="presentAlertPrompt()">Enviar SMS de prueba</ion-button>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col style="text-align: center">
+      <ion-button color="secondary" expand="block" shape="round" (click)="getNotifications()">Enviar Todas Las Noificaciones</ion-button>
+    </ion-col>
+  </ion-row>
+
+
+  <ion-list *ngIf="sent_successfully_notifications.length > 0">
+    <h4 style="color: #0ec254"><strong>Notificaciones Enviadas</strong></h4>
+    <ion-item *ngFor="let notification of sent_successfully_notifications">
+      <ion-label class="ion-text-wrap">
+        <ion-text color="primary">
+          <h3 style="color: #0ec254"><strong>{{ notification.telefono }}</strong></h3>
+        </ion-text>
+        <ion-text>
+          <p>{{ notification.mensaje }}</p>
+        </ion-text>
+        <ion-text color="medium">
+          <p style="font-size: 75%">{{ notification?.sentTime }}</p>
+        </ion-text>
+      </ion-label>
+      <ion-button color="success" fill="outline" slot="end">Ver</ion-button>
+    </ion-item>
+  </ion-list>
+  <ion-list *ngIf="not_set_notificationslength > 0">
+    <h4 style="color: #dd186b"><strong>Notificaciones No Enviadas</strong></h4>
+    <ion-item *ngFor="let notification of not_set_notifications">
+      <ion-label class="ion-text-wrap">
+        <ion-text color="primary">
+          <h3 style="color: #dd186b"><strong>{{ notification.telefono }}</strong></h3>
+        </ion-text>
+        <ion-text>
+          <p>{{ notification.mensaje }}</p>
+        </ion-text>
+        <ion-text color="medium">
+          <p style="font-size: 75%">12:05 PM</p>
+        </ion-text>
+      </ion-label>
+      <ion-button color="perro" fill="outline" slot="end">Ver</ion-button>
+    </ion-item>
+  </ion-list>
+
+
 </ion-content>

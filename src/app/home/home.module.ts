@@ -6,6 +6,9 @@ import { RouterModule } from '@angular/router';
 
 import { HomePage } from './home.page';
 
+import { SMS } from '@ionic-native/sms/ngx';
+
+
 @NgModule({
   imports: [
     CommonModule,
@@ -18,6 +21,9 @@ import { HomePage } from './home.page';
       }
     ])
   ],
-  declarations: [HomePage]
+  declarations: [HomePage],
+  providers: [
+      SMS
+  ]
 })
 export class HomePageModule {}

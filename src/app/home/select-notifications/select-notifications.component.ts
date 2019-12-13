@@ -48,6 +48,14 @@ export class SelectNotificationsComponent implements OnInit {
     });
   }
 
+  /*
+  Nos quedamos aquí. El enviar los mensajes con un setTimeOut no funcionó por la asincronia de
+  este medoto dentro del forEach. Se Sigue buscando una soluciín, pero por ahora, lo que hace
+  esta función, es enviar las notificaciones con la velocidad normal de un ciclo for (forEach)
+  y guardar las notificiones en los arrays correspondientes.
+  Aun se necesita trabajar en eso y se va a hacer.
+  Falta aun motrar el resultado sobre las notificaciones enviadas y no enviadas en el metodo.
+  */
   async sendCheckNotifications() {
 
     this.notifications_to_send = [];
@@ -71,9 +79,13 @@ export class SelectNotificationsComponent implements OnInit {
     for (const notification of this.notifications_to_send) {
       // setTimeout(async () => {
         await this.smsService.sendSMS(notification.telefono, notification.mensaje).then(response => {
-          console.log('Se envió el mensaje: '+nNot + ' el codigo de success que arroja es este: ', response)
+          console.log('Se envió el mensaje: '+nNot + ' el codigo de success que arroja es este: ', response);
+            notification.sentTime = moment().format('LT');
+            this.sent_successfully_notifications.push(notification);
         }).catch(error => {
-          console.log('No se envió el mensaje: '+ nNot + ' el error que da es el siguiente: ', error)
+          console.log('No se envió el mensaje: '+ nNot + ' el error que da es el siguiente: ', error);
+            notification.sentTime = moment().format('LT');
+            this.not_set_notifications.push(notification);
         });
         nNot += 1;
       // }, 2000)
@@ -81,8 +93,8 @@ export class SelectNotificationsComponent implements OnInit {
 
     console.log('En este punto ya debiern haberse enviado TODAS las notificaciones');
 
-    /*console.log('Array de notificaciones enviadas: ', this.sent_successfully_notifications);
-    console.log('Array de notificaciones NO enviadas: ', this.not_set_notifications);*/
+    console.log('Array de notificaciones enviadas: ', this.sent_successfully_notifications);
+    console.log('Array de notificaciones NO enviadas: ', this.not_set_notifications);
 
 
 
@@ -90,7 +102,7 @@ export class SelectNotificationsComponent implements OnInit {
   }
 
 
- async sendNotificationsAsync() {
+/* async sendNotificationsAsync() {
     let index = 0;
     await this.notifications_to_send.forEach((notification, i) => {
       // setTimeout(()=> {
@@ -112,7 +124,7 @@ export class SelectNotificationsComponent implements OnInit {
       // }, i * 2000);
       index+=1;
     });
-  }
+  }*/
 
 
 

@@ -5,8 +5,10 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { HomePage } from './home.page';
+import {SelectNotificationsComponent} from "./select-notifications/select-notifications.component";
+import {HomeRoutingModule} from "./home-routing.module";
 
-import { SMS } from '@ionic-native/sms/ngx';
+// import { SMS } from '@ionic-native/sms/ngx';
 
 
 @NgModule({
@@ -14,6 +16,7 @@ import { SMS } from '@ionic-native/sms/ngx';
     CommonModule,
     FormsModule,
     IonicModule,
+    HomeRoutingModule,
     RouterModule.forChild([
       {
         path: '',
@@ -21,9 +24,12 @@ import { SMS } from '@ionic-native/sms/ngx';
       }
     ])
   ],
-  declarations: [HomePage],
+  declarations: [
+      HomePage,
+      SelectNotificationsComponent
+  ],
   providers: [
-      SMS
+      // SMS
   ]
 })
 export class HomePageModule {}

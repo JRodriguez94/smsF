@@ -11,8 +11,13 @@ import { AppRoutingModule } from './app-routing.module';
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {NotificacionesProvider} from "./_providers/notificaciones";
 
+import { SMS } from '@ionic-native/sms/ngx';
+
+
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [
+      AppComponent
+  ],
   entryComponents: [],
   imports: [
     BrowserModule,
@@ -24,6 +29,7 @@ import {NotificacionesProvider} from "./_providers/notificaciones";
     StatusBar,
     SplashScreen,
     NotificacionesProvider,
+    SMS,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

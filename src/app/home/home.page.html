@@ -1,12 +1,20 @@
-<ion-header>
+<!--<ion-header>
   <ion-toolbar>
     <ion-title>
       SMS Notificaciones
     </ion-title>
   </ion-toolbar>
-</ion-header>
+</ion-header>-->
 
-<ion-content padding="true">
+<ion-content class="ion-padding">
+
+
+  <ion-row>
+    <ion-col>
+      <img class="logo-img" src="assets/imgs/logo-bgdl-vertical.svg">
+    </ion-col>
+  </ion-row>
+
   <ion-row>
     <ion-col style="text-align: center">
       <ion-button color="success" expand="block" shape="round" (click)="presentAlertPrompt()">Enviar SMS de prueba</ion-button>
@@ -14,7 +22,12 @@
   </ion-row>
   <ion-row>
     <ion-col style="text-align: center">
-      <ion-button color="secondary" expand="block" shape="round" (click)="getNotifications()">Enviar Todas Las Noificaciones</ion-button>
+      <ion-button color="secondary" expand="block" shape="round" (click)="sendAllNotifications()">Enviar Todas Las Noificaciones</ion-button>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col style="text-align: center">
+      <ion-button color="tertiary" expand="block" shape="round" (click)="goToSelectN()">Enviar Notificaciones Espesificas</ion-button>
     </ion-col>
   </ion-row>
 

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SMS } from '@ionic-native/sms/ngx';
+// import { SMS } from '@ionic-native/sms/ngx';
 import {NotificationsService} from "../_services/notifications.service";
 
 import {Notification} from "../_models/notification";
@@ -8,6 +8,12 @@ import { AlertController } from '@ionic/angular';
 import { NotificacionesProvider } from "../_providers/notificaciones";
 
 import * as moment from 'moment';
+import {SmsService} from "../_services/sms.service";
+
+import {Router, NavigationExtras} from "@angular/router";
+
+import {Observable} from 'rxjs';
+import {AlertsService} from "../_services/alerts.service";
 
 @Component({
   selector: 'app-home',
@@ -21,70 +27,90 @@ export class HomePage {
   sent_successfully_notifications: Notification[] = [];
   not_set_notifications: Notification[] = [];
 
+
+  // Variables temporales para pruebas
   sent_successfully_notifications2: any;
   not_set_notifications2: any;
 
+
   constructor(
-      private sms: SMS,
+      // private sms: SMS,
       private alertController: AlertController,
       private notificationsService: NotificationsService,
       private notificacionesProvider: NotificacionesProvider,
+      private smsService: SmsService,
+      private router: Router,
+      private alertsService: AlertsService
       ) {
   /*  console.log('Moment(?', moment().format('LT'));
     this.sent_successfully_notifications2 = this.notificacionesProvider.sent;
     this.not_set_notifications2 = this.notificacionesProvider.notSent;*/
+
+    // this.to_send_notifications = this.notificacionesProvider.toSend;
   }
 
-
-  getNotifications(){
+  sendAllNotifications(){
     this.notificationsService.getNotifications().subscribe(response => {
       this.notifications = response.response;
       this.sentNotificationsAlert(this.notifications.length);
-      // console.log('Notifications: (? ', response.response );
-      // console.log('Este es el array de notifications: ', this.notifications );
-    })
+    });
+  }
+
+  goToSelectN(){
+    console.log('Entró a la funcion goToSelectN()');
+
+    this.notificationsService.getNotifications().subscribe(notifications => {
+
+      // *************************************
+      let index_id = 0;
+      notifications.response.forEach(notification => {
+        notification.id = index_id;
+        index_id += 1;
+      });
+      // *************************************
+
+
+      let navigationExtras: NavigationExtras = {
+        state: {
+          notifications: notifications.response
+        }
+      };
+
+      console.log('Estas son las notificaciones; ', notifications.response);
+
+      this.router.navigate(['home/selectn'], navigationExtras);
+    });
   }
 
 
   sendNotifications(notifications: Notification[]) {
     console.log('array de notificaciones desde sendNotifications:', notifications);
     let index = 0;
-    notifications.forEach(notification => {
-     /* console.log('Notificación; '+index, notification);
-      console.log('Numero de la notifiación: ', notification.telefono);
-      console.log('Mensaje de la notifiación: ', notification.mensaje);*/
 
-      this.sendSMS(notification.telefono, notification.mensaje).then(()=> {
+    notifications.forEach((notification, i) => {
 
-        console.log('se ha enviado el mensaje: '+index);
+      setTimeout(()=> { // UP.1
 
-        notification.sentTime = moment().format('LT');
+        this.smsService.sendSMS(notification.telefono, notification.mensaje).then( backlog => {
 
-        this.sent_successfully_notifications.push(notification);
-      }).catch(()=> {
-        console.log('Fallo el envio del mensaje: '+index);
-        this.not_set_notifications.push(notification);
-      });
+          console.log('se ha enviado el mensaje: '+index + ' backLog: ', backlog);
+
+          notification.sentTime = moment().format('LT');
+
+          this.sent_successfully_notifications.push(notification);
+        }).catch(error => {
+          console.log('Fallo el envio del mensaje: '+index + ' Error: ', error);
+          this.not_set_notifications.push(notification);
+        });
+
+      }, i * 2000);  // UP.1
+
       index+=1;
     });
+
     console.log('Notificaciones enviadas: ', this.sent_successfully_notifications);
   }
 
-  sendSMS(number: string, message: string) {
-    return this.sms.send(number, message);
-  }
-
-
-  async presentSimpleAlert(header: string, subheader: string, messaje: string) {
-    const alert = await this.alertController.create({
-      header: header,
-      subHeader: subheader,
-      message: messaje,
-      buttons: ['OK']
-    });
-
-    await alert.present();
-  }
 
   async sentNotificationsAlert(notifications_number: number) {
     const alert = await this.alertController.create({
@@ -138,14 +164,14 @@ export class HomePage {
           handler: data => {
             console.log('data: ', data);
             if ( this.validateTestSMSPrompt(data.number, data.message) ) {
-              this.sendSMS(data.number, data.message).then(()=> {
-                this.presentSimpleAlert(
+              this.smsService.sendSMS(data.number, data.message).then(()=> {
+                this.alertsService.presentSimpleAlert(
                   'Hecho',
                   '',
                   'El mensaje ha sido enviado',
                 );
               }).catch( error => {
-                this.presentSimpleAlert(
+                this.alertsService.presentSimpleAlert(
                     'Error',
                     'Ha ocurrido un error',
                     error,
@@ -165,7 +191,7 @@ export class HomePage {
       if (number.length === 10) {
         return true
       } else {
-        this.presentSimpleAlert(
+        this.alertsService.presentSimpleAlert(
           'Error',
           'Upps..',
           'El numero debe contener 10 digitos'
@@ -173,7 +199,7 @@ export class HomePage {
         return false
       }
     } else {
-      this.presentSimpleAlert(
+      this.alertsService.presentSimpleAlert(
           'Error',
           'Upps..',
           'Los campos numero y mensaje son obligatorios'

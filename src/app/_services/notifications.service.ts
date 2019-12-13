@@ -20,6 +20,6 @@ export class NotificationsService {
 }
 
 class response {
-  elapsed: 0.024;
+  elapsed: string;
   response: Notification[];
 }

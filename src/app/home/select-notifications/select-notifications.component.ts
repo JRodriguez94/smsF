@@ -50,7 +50,7 @@ export class SelectNotificationsComponent implements OnInit {
 
   /*
   Nos quedamos aquí. El enviar los mensajes con un setTimeOut no funcionó por la asincronia de
-  este medoto dentro del forEach. Se Sigue buscando una soluciín, pero por ahora, lo que hace
+  este metodo dentro del forEach. Se Sigue buscando una soluciín, pero por ahora, lo que hace
   esta función, es enviar las notificaciones con la velocidad normal de un ciclo for (forEach)
   y guardar las notificiones en los arrays correspondientes.
   Aun se necesita trabajar en eso y se va a hacer.

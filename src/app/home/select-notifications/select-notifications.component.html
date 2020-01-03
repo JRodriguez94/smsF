@@ -13,12 +13,8 @@
 
     <!-- Notes in a List -->
     <ion-list>
-        <!--<ion-item *ngFor="let notification of notifications">-->
         <ion-item *ngFor="let notification of notifications_for_checks">
-            <!--<ion-note slot="start">Off</ion-note>-->
             <ion-checkbox slot="start" color="primary" [(ngModel)]="notification.isChecked"></ion-checkbox>
-            <!--<ion-checkbox slot="start" color="primary"></ion-checkbox>-->
-            <!--<ion-label>Note (Start)</ion-label>-->
             <ion-label class="ion-text-wrap">
                 <ion-text color="primary">
                     <h3><strong>{{ notification.notification.telefono }}</strong></h3>
@@ -26,9 +22,6 @@
                 <ion-text>
                     <p>{{ notification.notification.mensaje }}</p>
                 </ion-text>
-               <!-- <ion-text color="medium">
-                    <p style="font-size: 75%">12:05 PM</p>
-                </ion-text>-->
             </ion-label>
         </ion-item>
     </ion-list>
@@ -36,13 +29,6 @@
 
     <!-- fab placed to the bottom end -->
     <ion-fab (click)="sendCheckNotifications()" vertical="bottom" horizontal="end" slot="fixed">
-        <ion-fab-button color="tertiary">
-            <ion-icon name="send"></ion-icon>
-        </ion-fab-button>
-    </ion-fab>
-
-    <!-- fab placed to the bottom end -->
-    <ion-fab (click)="someFunctions()" vertical="bottom" horizontal="start" slot="fixed">
         <ion-fab-button color="tertiary">
             <ion-icon name="send"></ion-icon>
         </ion-fab-button>

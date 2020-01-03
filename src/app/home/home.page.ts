@@ -49,6 +49,14 @@ export class HomePage {
     // this.to_send_notifications = this.notificacionesProvider.toSend;
   }
 
+  /**
+   *  @Author: Josue Rodriguez | Josue@Fiducia.com.mx
+   *  @Parameters: null
+   *  @Returns: null
+   *  @Description: Esta función manda manda a llamar el metodo getNotifications del servicio notificationsService
+   *  para obtener todas las notificaciones disponibles mediante el API. Despues de obtenerlas, este objeto se almacena en this.notifications
+   *  para sacar el valor .length y ser utilizado como parametro en el metodo sentNotificationsAlert.
+   **/
   sendAllNotifications(){
     this.notificationsService.getNotifications().subscribe(response => {
       this.notifications = response.response;
@@ -56,6 +64,17 @@ export class HomePage {
     });
   }
 
+  /**
+   *  @Author: Josue Rodriguez | Josue@Fiducia.com.mx
+   *  @Parameters: null
+   *  @Returns: null
+   *  @Description: Esta función obtiene las notificaciones mediante el metodo getNotification. Al ser esta ultima funcion un obserbable,
+   *  como respuesta retorna un objeto notifications, este objeto notifications contiene un array de notificaciones sin ID (por ahora)
+   *  el siguiete paso, es iterar el objeto notificaciones, y asignarle un ID a cada elemento para poder hacer referencia a este, para eso
+   *  se utiliza un foreach en el objeto notifications.
+   *  Despues, se hace uso del recurso NavigationExtras de Angular Router para declarar un parametro de redirecionamiento, asignando a este el objeto
+   *  notifications. Finalmente, se hace el redireccionamiento al con router.navigate al recurso home/selectn con navigationExtras como parametro.
+   **/
   goToSelectN(){
     console.log('Entró a la funcion goToSelectN()');
 
@@ -82,7 +101,14 @@ export class HomePage {
     });
   }
 
-
+  /**
+   *  @Author: Josue Rodriguez | Josue@Fiducia.com.mx
+   *  @Parameters: notifications: Notifications[]
+   *  @Returns: null
+   *  @Description: Esta funcion recibe como parametro un arreglo de notificaciones,
+   *  aplica un foreach en este array y poc cada uno de los elementos, mediante un setTimeOut de 2 segundos,
+   *  se manda a llamar la funcion sendSMS del servicio sms Service con el elemento que esta siendo i
+   **/
   sendNotifications(notifications: Notification[]) {
     console.log('array de notificaciones desde sendNotifications:', notifications);
     let index = 0;

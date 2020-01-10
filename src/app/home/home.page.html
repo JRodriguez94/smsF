@@ -30,6 +30,11 @@
       <ion-button color="tertiary" expand="block" shape="round" (click)="goToSelectN()">Enviar Notificaciones Espesificas</ion-button>
     </ion-col>
   </ion-row>
+  <ion-row>
+    <ion-col style="text-align: center">
+      <ion-button color="tertiary" expand="block" shape="round" (click)="openModal()">Mostrar Modal</ion-button>
+    </ion-col>
+  </ion-row>
 
 
   <ion-list *ngIf="sent_successfully_notifications.length > 0">

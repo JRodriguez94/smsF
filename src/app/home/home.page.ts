@@ -12,8 +12,10 @@ import {SmsService} from "../_services/sms.service";
 
 import {Router, NavigationExtras} from "@angular/router";
 
-import {Observable} from 'rxjs';
 import {AlertsService} from "../_services/alerts.service";
+
+import { ModalController } from "@ionic/angular";
+import { NotificationsModalPage } from "../_components/modals/notifications-modal/notifications-modal.page";
 
 @Component({
   selector: 'app-home',
@@ -32,6 +34,9 @@ export class HomePage {
   sent_successfully_notifications2: any;
   not_set_notifications2: any;
 
+// se va a borrar o sustituir
+  dataReturned:any;
+
 
   constructor(
       // private sms: SMS,
@@ -40,7 +45,8 @@ export class HomePage {
       private notificacionesProvider: NotificacionesProvider,
       private smsService: SmsService,
       private router: Router,
-      private alertsService: AlertsService
+      private alertsService: AlertsService,
+      private modalController: ModalController
       ) {
   /*  console.log('Moment(?', moment().format('LT'));
     this.sent_successfully_notifications2 = this.notificacionesProvider.sent;
@@ -233,5 +239,28 @@ export class HomePage {
       return false
     }
   }
+
+  async openModal() {
+    const modal = await this.modalController.create({
+      component: NotificationsModalPage,
+      cssClass: "wideModal",
+      componentProps: {
+        "paramID": 123,
+        "paramTitle": "Test Title"
+      }
+    });
+
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned !== null) {
+        this.dataReturned = dataReturned.data;
+        //alert('Modal Sent Data :'+ dataReturned);
+      }
+    });
+
+    return await modal.present();
+  }
+
+
+
 
 }

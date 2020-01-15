@@ -15,7 +15,7 @@ import {Router, NavigationExtras} from "@angular/router";
 import {AlertsService} from "../_services/alerts.service";
 
 import { ModalController } from "@ionic/angular";
-import { NotificationsModalPage } from "../_components/modals/notifications-modal/notifications-modal.page";
+import {ModalService} from "../_services/modal.service";
 
 @Component({
   selector: 'app-home',
@@ -30,12 +30,14 @@ export class HomePage {
   not_set_notifications: Notification[] = [];
 
 
-  // Variables temporales para pruebas
+ /* // Variables temporales para pruebas
   sent_successfully_notifications2: any;
   not_set_notifications2: any;
 
 // se va a borrar o sustituir
   dataReturned:any;
+
+  modalNotifications: any;*/
 
 
   constructor(
@@ -46,7 +48,8 @@ export class HomePage {
       private smsService: SmsService,
       private router: Router,
       private alertsService: AlertsService,
-      private modalController: ModalController
+      private modalService: ModalService,
+      private modalCtrl: ModalController
       ) {
   /*  console.log('Moment(?', moment().format('LT'));
     this.sent_successfully_notifications2 = this.notificacionesProvider.sent;
@@ -144,6 +147,13 @@ export class HomePage {
   }
 
 
+  /**
+   *  @Author: Josue Rodriguez | Josue@Fiducia.com.mx
+   *  @Parameters: notifications_number: number
+   *  @Returns: null
+   *  @Description: Lanza un alert notificando al usuario que estan por ser enviadas
+   *  las notificaciones.
+   **/
   async sentNotificationsAlert(notifications_number: number) {
     const alert = await this.alertController.create({
       header: 'Eviar notifiaciones',
@@ -166,7 +176,15 @@ export class HomePage {
     await alert.present();
   }
 
-  async presentAlertPrompt() {
+  /**
+   *  @Author: Josue Rodriguez | Josue@Fiducia.com.mx
+   *  @Parameters: null
+   *  @Returns: null
+   *  @Description: Esta funcion lanza un pequeño form dentro de un aler donde se
+   *  va a capturar un numero y un mensaje que sera enviado como un mensaje de prueba
+   *  utilizando la funcion sendSMS del smsService.
+   **/
+  async sendSMSTest() {
     const alert = await this.alertController.create({
       header: 'Mensaje de prueba',
       inputs: [
@@ -218,6 +236,17 @@ export class HomePage {
     await alert.present();
   }
 
+
+  /**
+   *  @Author: Josue Rodriguez | Josue@Fiducia.com.mx
+   *  @Parameters: number: string, message: string
+   *  @Returns: false
+   *  @Description: Esta funcion es unicamente para validar de una
+   *  forma simple el promp form de los sms de prueba. La validacion de
+   *  este form sunicamente valida que el numero sea de diez digitos y que
+   *  el mensaje no este vacio. De haber alguno de estos erroes, simplemente
+   *  Precera un alert señalando el error.
+   **/
   validateTestSMSPrompt(number: string, message: string): boolean {
     if (number != '' && message != '') {
       if (number.length === 10) {
@@ -239,28 +268,5 @@ export class HomePage {
       return false
     }
   }
-
-  async openModal() {
-    const modal = await this.modalController.create({
-      component: NotificationsModalPage,
-      cssClass: "wideModal",
-      componentProps: {
-        "paramID": 123,
-        "paramTitle": "Test Title"
-      }
-    });
-
-    modal.onDidDismiss().then((dataReturned) => {
-      if (dataReturned !== null) {
-        this.dataReturned = dataReturned.data;
-        //alert('Modal Sent Data :'+ dataReturned);
-      }
-    });
-
-    return await modal.present();
-  }
-
-
-
 
 }

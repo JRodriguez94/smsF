@@ -38,19 +38,19 @@
         <ion-label color="primary">Datos a solicitar:</ion-label>
       </ion-list-header>
 
-      <ion-item [disabled]="check1ptDisable">
+      <ion-item [disabled]="radio1optDisable">
         <ion-label>Datos Federales</ion-label>
-        <ion-radio value="0" (click)="switchSelectedRadio(0)" [checked]="selectedCheck[0]"></ion-radio>
+        <ion-radio value="0" (click)="switchSelectedRadio(0)" [checked]="selectedRadio[0]"></ion-radio>
       </ion-item>
 
-      <ion-item [disabled]="check1ptDisable">
+      <ion-item [disabled]="radio1optDisable">
         <ion-label>Datos Estatales</ion-label>
-        <ion-radio value="1" (click)="switchSelectedRadio(1)" [checked]="selectedCheck[1]"></ion-radio>
+        <ion-radio value="1" (click)="switchSelectedRadio(1)" [checked]="selectedRadio[1]"></ion-radio>
       </ion-item>
 
-      <ion-item [disabled]="check2ptDisable">
+      <ion-item [disabled]="radio2optDisable">
         <ion-label>Ambos</ion-label>
-        <ion-radio value="2" (click)="switchSelectedRadio(2)" [checked]="selectedCheck[2]"></ion-radio>
+        <ion-radio value="2" (click)="switchSelectedRadio(2)" [checked]="selectedRadio[2]"></ion-radio>
       </ion-item>
     </ion-radio-group>
   </ion-list>
@@ -61,12 +61,8 @@
     <ion-checkbox color="primary" (ionChange)="changeIsAnUpdate()" [checked]="isAnUpdate"></ion-checkbox>
   </ion-item>
 
-
   <div style="padding-top: 1em">
-    <ion-button color="secondary" expand="block" shape="round" (click)="sendReq()">Aceptar</ion-button>
-  </div>
-  <div style="padding-top: 1em">
-    <ion-button color="tertiary" expand="block" shape="round" (click)="testVlidation()">Test</ion-button>
+    <ion-button color="tertiary" expand="block" shape="round" (click)="onSubmit()">Enviar</ion-button>
   </div>
 
 

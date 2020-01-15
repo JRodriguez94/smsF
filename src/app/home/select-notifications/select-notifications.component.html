@@ -9,7 +9,17 @@
 
 
 <ion-content class="ion-padding">
-  <h1>Notificaciones de hoy</h1>
+  <h1>Notificaciones a enviar</h1>
+
+
+    <ion-item (click)="selectAll($event)">
+        <ion-checkbox slot="start" color="primary" [(ngModel)]="isAllSelected"></ion-checkbox>
+        <ion-label class="ion-text-wrap">
+            <ion-text color="tertiary">
+                <h3><strong>SELECCIONAR TODO</strong></h3>
+            </ion-text>
+        </ion-label>
+    </ion-item>
 
     <!-- Notes in a List -->
     <ion-list>

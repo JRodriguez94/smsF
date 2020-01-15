@@ -17,7 +17,7 @@
 
   <ion-row>
     <ion-col style="text-align: center">
-      <ion-button color="success" expand="block" shape="round" (click)="presentAlertPrompt()">Enviar SMS de prueba</ion-button>
+      <ion-button color="success" expand="block" shape="round" (click)="sendSMSTest()">Enviar SMS de prueba</ion-button>
     </ion-col>
   </ion-row>
   <ion-row>
@@ -32,7 +32,7 @@
   </ion-row>
   <ion-row>
     <ion-col style="text-align: center">
-      <ion-button color="tertiary" expand="block" shape="round" (click)="openModal()">Mostrar Modal</ion-button>
+      <ion-button color="tertiary" expand="block" shape="round" (click)="this.modalService.openModal()">Mostrar Modal</ion-button>
     </ion-col>
   </ion-row>
 

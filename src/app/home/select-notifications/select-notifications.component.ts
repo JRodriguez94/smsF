@@ -7,6 +7,7 @@ import {SmsService} from "../../_services/sms.service";
 import {AlertsService} from "../../_services/alerts.service";
 
 import * as moment from 'moment';
+import {AlertController} from "@ionic/angular";
 
 
 @Component({
@@ -23,12 +24,15 @@ export class SelectNotificationsComponent implements OnInit {
   sent_successfully_notifications: Notification[] = [];
   not_set_notifications: Notification[] = [];
 
+  isAllSelected: boolean = false;
+
 
   constructor(
       private route: ActivatedRoute,
       private router: Router,
       private smsService: SmsService,
-      private alertsService: AlertsService
+      private alertsService: AlertsService,
+      private alertController: AlertController
   ) { }
 
   ngOnInit() {
@@ -73,6 +77,26 @@ export class SelectNotificationsComponent implements OnInit {
       );
       return
     }
+
+
+    // Alert de confirmación -----------------------------------
+
+    // console.log('Que se supone que retorna this.alertsService.confirmationAlert(): ', typeof this.alertsService.confirmationAlert);
+
+    const confirmation = await this.alertsService.confirmationAlert(
+        'Aviso',
+        'Esas por enviars ' + this.notifications_to_send.length +' notificaciones, ¿Estas seguro de esto?'
+    );
+
+    if (!confirmation)
+      return;
+
+    // Alert de confirmación -----------------------------------
+
+
+    // NOTA: APARTIR DE AQUI SE TIENE QUE MANEJAR DE FORMA DIFERENTE HACIENDO
+    // UN OBSERVABLE O ALGO PARA QUE NOTIFIQUE CUANDO EL PROCESO HAYA TERMINADO
+
 
     let nNot = 0;
 
@@ -125,6 +149,18 @@ export class SelectNotificationsComponent implements OnInit {
       index+=1;
     });
   }*/
+
+
+
+  selectAll($event) {
+    console.log('Entrí a la función selectAll: ', $event);
+    this.notifications_for_checks.forEach(notification => {
+      // console.log('Notificacion: ', notification.isChecked);
+
+      notification.isChecked = this.isAllSelected;
+
+    });
+  }
 
 
 

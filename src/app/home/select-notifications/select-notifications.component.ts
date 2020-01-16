@@ -102,7 +102,16 @@ export class SelectNotificationsComponent implements OnInit {
 
     for (const notification of this.notifications_to_send) {
       // setTimeout(async () => {
-        await this.smsService.sendSMS(notification.telefono, notification.mensaje).then(response => {
+
+      console.time('loop');
+      let wasSent = await this.smsService.sendSMSasync(notification.telefono, notification.mensaje);
+      console.timeEnd('loop');
+      if (wasSent) {
+        console.log('Mensaje '+nNot+' fue enviado');
+      } else {
+        console.log('Mensaje '+nNot+' NO fue enviado');
+      }
+        /*await this.smsService.sendSMS(notification.telefono, notification.mensaje).then(response => {
           console.log('Se envió el mensaje: '+nNot + ' el codigo de success que arroja es este: ', response);
             notification.sentTime = moment().format('LT');
             this.sent_successfully_notifications.push(notification);
@@ -111,8 +120,9 @@ export class SelectNotificationsComponent implements OnInit {
             notification.sentTime = moment().format('LT');
             this.not_set_notifications.push(notification);
         });
-        nNot += 1;
+        nNot += 1;*/
       // }, 2000)
+        nNot++;
     }
 
     console.log('En este punto ya debiern haberse enviado TODAS las notificaciones');

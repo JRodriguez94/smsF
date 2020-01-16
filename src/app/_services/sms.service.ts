@@ -18,6 +18,31 @@ export class SmsService {
     return this.sms.send(number, message);
   }
 
+
+  async sendSMSasync(number: string, message: string): Promise<boolean> {
+
+      // console.time('loop');
+      let resolveFunction: (wasSent: boolean) => void;
+      const promise = new Promise<boolean>(resolve => {
+         resolveFunction = resolve;
+      });
+
+      setTimeout(async () => {
+      const sms = await this.sendSMS(number, message).then(() => {
+          resolveFunction(true);
+      }).catch(() => {
+          resolveFunction(false)
+      });
+      // console.timeEnd('loop');
+
+      }, 5000);
+      return promise;
+  }
+
+
+
+
+
    sendMultiSMS(notifications: Notification[]): notificationL[] {
 
     let nNot = 0;

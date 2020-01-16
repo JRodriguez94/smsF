@@ -36,6 +36,12 @@
     </ion-col>
   </ion-row>
 
+  <ion-row>
+    <ion-col style="text-align: center">
+      <ion-button color="dark" expand="block" shape="round" (click)="perro()">Loading</ion-button>
+    </ion-col>
+  </ion-row>
+
 
   <ion-list *ngIf="sent_successfully_notifications.length > 0">
     <h4 style="color: #0ec254"><strong>Notificaciones Enviadas</strong></h4>

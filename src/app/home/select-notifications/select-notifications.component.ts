@@ -7,7 +7,9 @@ import {SmsService} from "../../_services/sms.service";
 import {AlertsService} from "../../_services/alerts.service";
 
 import * as moment from 'moment';
-import {AlertController} from "@ionic/angular";
+import {AlertController, LoadingController} from "@ionic/angular";
+
+import { ToastController } from '@ionic/angular';
 
 
 @Component({
@@ -21,8 +23,10 @@ export class SelectNotificationsComponent implements OnInit {
 
   notifications_to_send: Notification[] = [];
 
-  sent_successfully_notifications: Notification[] = [];
+  // sent_successfully_notifications: Notification[] = [];
   not_set_notifications: Notification[] = [];
+
+  sent_notifications: Notification[] = [];
 
   isAllSelected: boolean = false;
 
@@ -32,7 +36,9 @@ export class SelectNotificationsComponent implements OnInit {
       private router: Router,
       private smsService: SmsService,
       private alertsService: AlertsService,
-      private alertController: AlertController
+      private alertController: AlertController,
+      private toastController: ToastController,
+      public loadingController: LoadingController
   ) { }
 
   ngOnInit() {
@@ -97,8 +103,8 @@ export class SelectNotificationsComponent implements OnInit {
     // NOTA: APARTIR DE AQUI SE TIENE QUE MANEJAR DE FORMA DIFERENTE HACIENDO
     // UN OBSERVABLE O ALGO PARA QUE NOTIFIQUE CUANDO EL PROCESO HAYA TERMINADO
 
-
-    let nNot = 0;
+    this.presentLoading();
+    let nNot = 1;
 
     for (const notification of this.notifications_to_send) {
       // setTimeout(async () => {
@@ -107,10 +113,20 @@ export class SelectNotificationsComponent implements OnInit {
       let wasSent = await this.smsService.sendSMSasync(notification.telefono, notification.mensaje);
       console.timeEnd('loop');
       if (wasSent) {
+        notification.wasSent = true;
+        this.presentToast('Notificación numero '+nNot+' fue enviado con exito');
         console.log('Mensaje '+nNot+' fue enviado');
       } else {
+        notification.wasSent = false;
+        this.not_set_notifications.push(notification);
+        this.presentToast('Se produjo un error al intentar enviar la notificación numero '+nNot);
         console.log('Mensaje '+nNot+' NO fue enviado');
       }
+
+        notification.sentTime = moment().format('LT');
+
+        this.sent_notifications.push(notification);
+
         /*await this.smsService.sendSMS(notification.telefono, notification.mensaje).then(response => {
           console.log('Se envió el mensaje: '+nNot + ' el codigo de success que arroja es este: ', response);
             notification.sentTime = moment().format('LT');
@@ -122,12 +138,15 @@ export class SelectNotificationsComponent implements OnInit {
         });
         nNot += 1;*/
       // }, 2000)
+
+
         nNot++;
     }
+    this.closseLoading();
 
     console.log('En este punto ya debiern haberse enviado TODAS las notificaciones');
 
-    console.log('Array de notificaciones enviadas: ', this.sent_successfully_notifications);
+    console.log('Array de notificaciones enviadas: ', this.sent_notifications);
     console.log('Array de notificaciones NO enviadas: ', this.not_set_notifications);
 
 
@@ -171,6 +190,29 @@ export class SelectNotificationsComponent implements OnInit {
 
     });
   }
+
+    async presentToast(message: string) {
+        const toast = await this.toastController.create({
+            message: message,
+            duration: 4000
+        });
+        toast.present();
+    }
+
+
+    async presentLoading() {
+        const loading = await this.loadingController.create({
+            spinner: "circular",
+            // duration: 5000,
+            message: 'Enviando notificaciones..',
+            translucent: true,
+        });
+        return await loading.present();
+    }
+
+    closseLoading() {
+        this.loadingController.dismiss();
+    }
 
 
 

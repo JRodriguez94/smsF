@@ -3,4 +3,5 @@ export class Notification {
     mensaje: string;
     sentTime?: string;
     id?: number;
+    wasSent: boolean;
 }

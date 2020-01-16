@@ -16,6 +16,9 @@ import {AlertsService} from "../_services/alerts.service";
 
 import { ModalController } from "@ionic/angular";
 import {ModalService} from "../_services/modal.service";
+import {UtilitiesService} from "../_services/utilities.service";
+
+import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -28,6 +31,9 @@ export class HomePage {
 
   sent_successfully_notifications: Notification[] = [];
   not_set_notifications: Notification[] = [];
+
+
+  loading: any = null;
 
 
  /* // Variables temporales para pruebas
@@ -49,7 +55,8 @@ export class HomePage {
       private router: Router,
       private alertsService: AlertsService,
       private modalService: ModalService,
-      private modalCtrl: ModalController
+      private utilitiesService: UtilitiesService,
+      public loadingController: LoadingController
       ) {
   /*  console.log('Moment(?', moment().format('LT'));
     this.sent_successfully_notifications2 = this.notificacionesProvider.sent;
@@ -268,5 +275,37 @@ export class HomePage {
       return false
     }
   }
+
+
+
+  // TEMP TEST AREA
+
+
+
+  perro() {
+    this.presentLoading();
+    setTimeout(() => {
+      this.closseLoading();
+    }, 10000)
+  }
+
+  async presentLoading() {
+     this.loading = await this.loadingController.create({
+      spinner: "circular",
+      // duration: 5000,
+      message: 'Enviando notificaciones..',
+      translucent: true,
+    });
+    return await this.loading.present();
+  }
+
+  closseLoading() {
+    this.loadingController.dismiss();
+  }
+
+  // TEMP TEST AREA
+
+
+
 
 }

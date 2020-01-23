@@ -4,10 +4,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)},
-  {
-    path: 'notifications-modal',
-    loadChildren: () => import('./_components/modals/notifications-modal/notifications-modal.module').then( m => m.NotificationsModalPageModule)
-  },
+  { path: 'logs', loadChildren: () => import('./logs/logs.module').then( m => m.LogsPageModule)},
 ];
 
 @NgModule({

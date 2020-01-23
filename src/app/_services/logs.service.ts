@@ -105,7 +105,7 @@ export class LogsService {
             let notifications_logs: any = await this.buildNewNotificationsLogsObj(sent_notifications);
 
             console.log('Esto es lo que retorna el else..', notifications_logs);
-            
+
             await this.storage.get('notifications_logs').then(data => {
               notifications_logs_array = data;
             }).catch(async err => { await this.storageErrorAlert('recuperar', err); });

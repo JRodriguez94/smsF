@@ -4,6 +4,7 @@ import {SentNotifications} from "../_models/notification";
 import {NotificationsLogs} from "../_models/notifications-logs";
 
 import * as moment from 'moment';
+import {AlertsService} from "./alerts.service";
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +13,11 @@ export class LogsService {
 
   thisKeyExist: boolean;
 
+  isSaved: boolean = false;
+
   constructor(
-      private storage: Storage
+      private storage: Storage,
+      private alerstService: AlertsService
   ) { }
 
   async saveNotificationLogs(sent_notifications: SentNotifications) {
@@ -21,19 +25,27 @@ export class LogsService {
     // await this.storage.remove('notifications_logs');
     // debugger;
 
-    console.log('Este es el objeto sentNotifications que llega: ', sent_notifications);
-
-    // await this.storage.set('notifications_logs', sent_notifications); // Esto para qué es?
-
     await this.saveSentNotifications(sent_notifications);
 
     console.log('Terminó');
+    console.log('Este es el valor de isSaved: ', this.isSaved);
 
-    // await this.checkIfKeyExist('notifications_logs');
-    /*if ( this.thisKeyExist != true )
-      console.log('No existe la llave');
-    else
-      console.log('Si existe la llave');*/
+    if (this.isSaved) {
+      let alertResponse: boolean = await this.alerstService.logsConfirmationAlert('Hecho!', 'Las notificaciones han sido enviadas');
+      if (alertResponse) {
+        console.log('Quiere ver los logs :D');
+      } else {
+        console.log('No quiere ver tus pinches logs :c');
+      }
+
+    } else
+      await this.alerstService.presentSimpleAlert(
+          'Error',
+          'Ocurrio un error al intentar guardar las notificaciones en el storage',
+          'Por favor, intentelo de nuevo más tarde o contacte al administrador.'
+      );
+
+
   }
 
   async saveSentNotifications(sent_notifications: SentNotifications) {
@@ -50,13 +62,14 @@ export class LogsService {
         let notifications_logs_array: NotificationsLogs[] = [];
 
 
-        let notifications_logs = await this.buildNewNotificationsLogsObj(sent_notifications);
+        let notifications_logs:any = await this.buildNewNotificationsLogsObj(sent_notifications);
 
-        console.log('Esto es lo que devuelve la funcion esta ue hice: ', notifications_logs);
+        // console.log('Esto es lo que devuelve la funcion esta ue hice: ', notifications_logs);
 
-        // notifications_logs_array.push(notifications_logs); // Esto tambien ya da un error. Deberia descomentarse(?
-
-        await this.storage.set('notifications_logs', notifications_logs_array);
+        notifications_logs_array.push(notifications_logs); // Esto tambien ya da un error. Deberia descomentarse(?
+        //
+        await this.storage.set('notifications_logs', notifications_logs_array).then(()=> this.isSaved = true)
+            .catch(err => console.log('Error al intentar guardar este pedo: ', err))
 
       } else {
 
@@ -65,14 +78,10 @@ export class LogsService {
         await this.storage.get('notifications_logs').then(async data => {
           let logs_temp: NotificationsLogs[] = data;
 
-          // console.log('Este es data completo: ', data);
 
           let todays_Attempts = logs_temp[logs_temp.length-1].todays_attempts;
           let todays_date = logs_temp[logs_temp.length-1].date;
           // let todays_date = '2020-01-20';
-
-          console.log('Aqui tiene que salir el 0', todays_Attempts-1);
-          console.log('Aquí deberia salir la fecha del día de hoy: ', todays_date);
 
           if ( todays_date === moment().format('YYYY-MM-DD') ) {
             console.log('Si es LA MISMA FECHA ');
@@ -83,7 +92,8 @@ export class LogsService {
 
             // debugger;
 
-            await this.storage.set('notifications_logs', notifications_logs);
+            await this.storage.set('notifications_logs', notifications_logs).then(()=> this.isSaved = true)
+                .catch(async err => { await this.storageErrorAlert('recuperar', err); });
 
 
           } else {
@@ -95,21 +105,17 @@ export class LogsService {
             let notifications_logs: any = await this.buildNewNotificationsLogsObj(sent_notifications);
 
             console.log('Esto es lo que retorna el else..', notifications_logs);
-
-
-            // El catch de aqui se puede mejorar cambiando el LOG por un ALERT para que el
-            // usuario esté enterado de que algo ha fallado. (En teoria es asincrono, pero
-            // habria que tener especial cuidado en el proceso)
+            
             await this.storage.get('notifications_logs').then(data => {
               notifications_logs_array = data;
-            }).catch(err => { console.log('Error al intentar cargar el local storage: ', err) });
+            }).catch(async err => { await this.storageErrorAlert('recuperar', err); });
 
             console.log('TIPO DE DATO QUE REGRESA ESTO...', typeof notifications_logs);
 
             notifications_logs_array.push(notifications_logs); // Esto da un error, no sé por qué deberia descomentarse(?
 
-            await this.storage.set('notifications_logs', notifications_logs_array);
-            // debugger;
+            await this.storage.set('notifications_logs', notifications_logs_array).then(()=> this.isSaved = true)
+                .catch(async err => { await this.storageErrorAlert('guardar', err); });
           }
 
 
@@ -118,45 +124,16 @@ export class LogsService {
 
       }
 
-    // console.log('Este seria el objeto notifications_logs desde el storage: ', this.storage.get('notifications_logs'));
-
   }
 
 
   async buildNewNotificationsLogsObj(sent_notifications: SentNotifications, attempt?: number) {
-/*    let sent_notifications_array: SentNotifications[] = [];
-    sent_notifications_array.push(sent_notifications);*/
 
     if ( attempt ) {
-      /*/!*let sent_notifications_array: SentNotifications[] = [];
-      sent_notifications_array.push(sent_notifications);*!/
-      console.log('Entra al if del ATTEMPT ');
-
-      let sent_notifications_array: NotificationsLogs[];
-      await this.storage.get('notifications_logs').then( data => {
-        console.log('Este es data en el deste del aquel..', data);
-        sent_notifications_array = data;
-      }).catch(err => { console.log('Error al intentar leer el local storage: ', err) });
-
-      console.log('Vamos a ver que sale de esto..', sent_notifications_array[0].sent_notifications);
-      console.log('En teoria.. aqui ya deberia contener los dos arreglos de notificaciones..', sent_notifications_array);
-
-
-      // En teoria setearles directamente el 0 a los arrays tanto de arriba, este siguiente y
-      // el de más abajo, no afecta el control del conteo (aparentemente) pero tener especial cuidado.
-      sent_notifications_array[0].sent_notifications.push(sent_notifications);
-
-
-      return {
-        id: moment().format('YYYYMMDD') + '_' + (attempt+1),
-        date: moment().format('YYYY-MM-DD'),
-        todays_attempts: attempt+1,
-        sent_notifications: sent_notifications_array[0].sent_notifications
-      };*/
 
       let all_logs: NotificationsLogs[] = [];
       await this.storage.get('notifications_logs').then(data => {
-         all_logs = data;
+        all_logs = data;
         let current_log: NotificationsLogs = all_logs[(all_logs.length-1)];
 
         let sent_notifications_array_temp: SentNotifications[] = current_log.sent_notifications;
@@ -167,29 +144,15 @@ export class LogsService {
 
         all_logs[(all_logs.length-1)] = current_log;
 
-
         console.log('Esto es lo que va a retornar el if attempt', all_logs);
 
-        // debugger
-      }).catch(err => console.log('Ocurrio un error al intentar recuperar los datos: ', err));
+      }).catch(async err => { await this.storageErrorAlert('recuperar', err); });
 
       return all_logs;
 
 
-      // sent_notifications_array.push(newNotLogs);
-      // console.log('EN TEORIA ESTE DEBERIA SER EL RESULTADO FINAL(?', sent_notifications_array)
-
     } else {
       console.log('Entra al ELSE del ATTEMPT ');
-
-      /*let sent_notifications_array: NotificationsLogs;
-      await this.storage.get('notifications_logs').then( data => {
-        console.log('Este es data en el deste del aquel..', data);
-        sent_notifications_array = data;
-      }).catch(err => { console.log('Error al intentar leer el local storage: ', err) });
-
-      console.log('Vamos a ver que sale de esto..', sent_notifications_array[0]);
-      console.log('En teoria.. aqui ya deberia contener los dos arreglos de notificaciones..', sent_notifications_array);*/
 
       let sent_notifications_array: SentNotifications[] = [];
       sent_notifications_array.push(sent_notifications);
@@ -204,6 +167,15 @@ export class LogsService {
   }
 
 
+
+  async checkIfKeyExist(key: string) {
+    return this.storage.get(key).then(res => {
+      // console.log('Este es res: ', res);
+      if (res != null)
+        this.thisKeyExist = true
+    });
+  }
+
   testLogs() {
     this.storage.get('notifications_logs').then( data => {
       console.log('Este es el valor de notifications_logs desde el storage: ', data);
@@ -212,14 +184,12 @@ export class LogsService {
     })
   }
 
-  async checkIfKeyExist(key: string) {
-    console.log('Entró a la funcion de checkkey');
-    // let keyExist: boolean = false;
-    return this.storage.get(key).then(res => {
-      console.log('Este es res: ', res);
-      if (res != null)
-        this.thisKeyExist = true
-    });
+  async storageErrorAlert(type: string, error: string) {
+    await this.alerstService.presentSimpleAlert('Error', 'Algo fallo al intentar ' + type +' los datos del storage', error)
+  }
+
+  clearStorage() {
+    this.storage.remove('notifications_logs').then(() => console.log('Se borro el storage'));
   }
 
 }

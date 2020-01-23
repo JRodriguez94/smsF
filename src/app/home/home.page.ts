@@ -300,6 +300,4 @@ export class HomePage {
   // TEMP TEST AREA
 
 
-
-
 }

@@ -71,4 +71,28 @@ export class AlertsService {
     return promise;
   }
 
+ async logsConfirmationAlert(header: string, message: string): Promise<boolean> {
+    let resolveFunction: (confirm: boolean) => void;
+    const promise = new Promise<boolean>(resolve => {
+      resolveFunction = resolve;
+    });
+    const alert = await this.alertController.create({
+      header: header,
+      message,
+      backdropDismiss: false,
+      buttons: [
+        {
+          text: 'Ver Logs',
+          handler: () => resolveFunction(true)
+        },
+        {
+          text: 'Aceptar',
+          handler: () => resolveFunction(false)
+        }
+      ]
+    });
+    await alert.present();
+    return promise;
+  }
+
 }

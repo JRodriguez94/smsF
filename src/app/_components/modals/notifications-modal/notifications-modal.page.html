@@ -1,0 +1,69 @@
+<!--<ion-header>
+  <ion-toolbar>
+    <ion-title>notificationsModal</ion-title>
+  </ion-toolbar>
+</ion-header>-->
+
+<ion-content class="ion-padding">
+
+  <ion-item>
+    <ion-label>Fecha:</ion-label>
+    <ion-datetime #datePicker
+                  [(ngModel)]="today_moment"
+                  [min]="calendar_min"
+                  [max]="calendar_max"
+                  cancelText="Cancelar"
+                  doneText="Seleccionar"
+                  pickerFormat="DD/MM/YYYY"
+                  displayFormat="DD/MM/YYYY"
+                  style="color: #3880ff"
+                  (ionChange)="dateOnChange(datePicker.value)">
+
+    </ion-datetime>
+    <ion-icon name="calendar" size="large" slot="end"></ion-icon>
+  </ion-item>
+
+  <ion-item (click)="showPicker()">
+    <ion-label>Estado:</ion-label>
+    <ion-label color="primary" style="text-align: right">{{ selected_state }}</ion-label>
+    <ion-button slot="end" fill="clear">
+      <ion-icon name="arrow-dropdown" size="large" slot="end" color="dark"></ion-icon>
+    </ion-button>
+  </ion-item>
+
+
+  <ion-list>
+    <ion-radio-group>
+      <ion-list-header>
+        <ion-label color="primary">Datos a solicitar:</ion-label>
+      </ion-list-header>
+
+      <ion-item [disabled]="radio1optDisable">
+        <ion-label>Datos Federales</ion-label>
+        <ion-radio value="0" (click)="switchSelectedRadio(0)" [checked]="selectedRadio[0]"></ion-radio>
+      </ion-item>
+
+      <ion-item [disabled]="radio1optDisable">
+        <ion-label>Datos Estatales</ion-label>
+        <ion-radio value="1" (click)="switchSelectedRadio(1)" [checked]="selectedRadio[1]"></ion-radio>
+      </ion-item>
+
+      <ion-item [disabled]="radio2optDisable">
+        <ion-label>Ambos</ion-label>
+        <ion-radio value="2" (click)="switchSelectedRadio(2)" [checked]="selectedRadio[2]"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </ion-list>
+
+
+  <ion-item>
+    <ion-label>Es una actualización</ion-label>
+    <ion-checkbox color="primary" (ionChange)="changeIsAnUpdate()" [checked]="isAnUpdate"></ion-checkbox>
+  </ion-item>
+
+  <div style="padding-top: 1em">
+    <ion-button color="tertiary" expand="block" shape="round" (click)="onSubmit()">Enviar</ion-button>
+  </div>
+
+
+</ion-content>

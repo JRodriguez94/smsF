@@ -15,9 +15,9 @@
     </ion-col>
   </ion-row>
 
-  <ion-row>
+<!--  <ion-row>
     <ion-col style="text-align: center">
-      <ion-button color="success" expand="block" shape="round" (click)="presentAlertPrompt()">Enviar SMS de prueba</ion-button>
+      <ion-button color="success" expand="block" shape="round" (click)="sendSMSTest()">Enviar SMS de prueba</ion-button>
     </ion-col>
   </ion-row>
   <ion-row>
@@ -29,9 +29,27 @@
     <ion-col style="text-align: center">
       <ion-button color="tertiary" expand="block" shape="round" (click)="goToSelectN()">Enviar Notificaciones Espesificas</ion-button>
     </ion-col>
+  </ion-row>-->
+
+  <ion-row>
+    <ion-col style="text-align: center">
+      <ion-button color="success" expand="block" shape="round" (click)="this.modalService.openModal()">Enviar notificaciones</ion-button>
+    </ion-col>
   </ion-row>
 
+  <ion-row>
+    <ion-col style="text-align: center">
+      <ion-button color="dark" expand="block" shape="round" (click)="logsService.testLogs()">Test Logs</ion-button>
+    </ion-col>
+  </ion-row>
 
+  <ion-row>
+    <ion-col style="text-align: center">
+      <ion-button color="light" expand="block" shape="round" (click)="logsService.clearStorage()">Clean Logs</ion-button>
+    </ion-col>
+  </ion-row>
+
+<!--
   <ion-list *ngIf="sent_successfully_notifications.length > 0">
     <h4 style="color: #0ec254"><strong>Notificaciones Enviadas</strong></h4>
     <ion-item *ngFor="let notification of sent_successfully_notifications">
@@ -65,7 +83,18 @@
       </ion-label>
       <ion-button color="perro" fill="outline" slot="end">Ver</ion-button>
     </ion-item>
-  </ion-list>
+  </ion-list>-->
 
+  <ion-fab vertical="bottom" horizontal="end">
+    <ion-fab-button translucent color="light">
+      <ion-icon name="settings"></ion-icon>
+    </ion-fab-button>
+
+    <ion-fab-list side="top">
+      <!--<ion-fab-button><ion-icon name="checkmark-circle-outline"></ion-icon></ion-fab-button>-->
+      <ion-fab-button routerLink="/logs"><ion-icon name="done-all"></ion-icon></ion-fab-button>
+      <ion-fab-button (click)="sendSMSTest()"><ion-icon name="paper-plane"></ion-icon></ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
 
 </ion-content>

@@ -14,6 +14,10 @@ import {NotificacionesProvider} from "./_providers/notificaciones";
 import { SMS } from '@ionic-native/sms/ngx';
 import {NotificationsModalPageModule} from "./_components/modals/notifications-modal/notifications-modal.module";
 
+import { IonicStorageModule } from '@ionic/storage';
+
+
+
 
 
 @NgModule({
@@ -27,6 +31,7 @@ import {NotificationsModalPageModule} from "./_components/modals/notifications-m
     AppRoutingModule,
     HttpClientModule,
     NotificationsModalPageModule,
+    IonicStorageModule.forRoot()
   ],
   providers: [
     StatusBar,

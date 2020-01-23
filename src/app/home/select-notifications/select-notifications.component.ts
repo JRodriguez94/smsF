@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 
-import { Notification } from "../../_models/notification";
+import {Notification, SentNotifications} from "../../_models/notification";
 import {SmsService} from "../../_services/sms.service";
 
 import {AlertsService} from "../../_services/alerts.service";
@@ -10,6 +10,8 @@ import * as moment from 'moment';
 import {AlertController, LoadingController} from "@ionic/angular";
 
 import { ToastController } from '@ionic/angular';
+
+import {LogsService} from "../../_services/logs.service";
 
 
 @Component({
@@ -38,7 +40,8 @@ export class SelectNotificationsComponent implements OnInit {
       private alertsService: AlertsService,
       private alertController: AlertController,
       private toastController: ToastController,
-      public loadingController: LoadingController
+      private loadingController: LoadingController,
+      private logsService: LogsService,
   ) { }
 
   ngOnInit() {
@@ -71,6 +74,9 @@ export class SelectNotificationsComponent implements OnInit {
     this.not_set_notifications = [];
     this.notifications_to_send = [];
 
+    let attempt_starts_at: string;
+    let attempt_ends_at: string;
+
     this.notifications_for_checks.forEach( notification => {
       if(notification.isChecked === true ){
         this.notifications_to_send.push(notification.notification)
@@ -86,11 +92,6 @@ export class SelectNotificationsComponent implements OnInit {
       return
     }
 
-
-    // Alert de confirmación -----------------------------------
-
-    // console.log('Que se supone que retorna this.alertsService.confirmationAlert(): ', typeof this.alertsService.confirmationAlert);
-
     const confirmation = await this.alertsService.confirmationAlert(
         'Aviso',
         'Esas por enviars ' + this.notifications_to_send.length +' notificaciones, ¿Estas seguro de esto?'
@@ -99,53 +100,28 @@ export class SelectNotificationsComponent implements OnInit {
     if (!confirmation)
       return;
 
-    // Alert de confirmación -----------------------------------
-
-
-    // NOTA: APARTIR DE AQUI SE TIENE QUE MANEJAR DE FORMA DIFERENTE HACIENDO
-    // UN OBSERVABLE O ALGO PARA QUE NOTIFIQUE CUANDO EL PROCESO HAYA TERMINADO
-
-    // this.presentLoading();
-    /*let nNot = 1;
-
-    for (const notification of this.notifications_to_send) {
-
-      console.time('loop');
-      let wasSent = await this.smsService.sendSMSasync(notification.telefono, notification.mensaje);
-      console.timeEnd('loop');
-      if (wasSent) {
-        notification.wasSent = true;
-        this.presentToast('Notificación numero '+nNot+' fue enviado con exito');
-        console.log('Mensaje '+nNot+' fue enviado');
-      } else {
-        notification.wasSent = false;
-        this.not_set_notifications.push(notification);
-        this.presentToast('Se produjo un error al intentar enviar la notificación numero '+nNot);
-        console.log('Mensaje '+nNot+' NO fue enviado');
-      }
-
-        notification.sentTime = moment().format('LT');
-
-        this.sent_notifications.push(notification);
-
-
-        nNot++;
-    }*/
-
-
+    attempt_starts_at = moment().format('LTS');
     await this.sendNotifications(this.notifications_to_send);
+    attempt_ends_at = moment().format('LTS');
 
+    let sent_notifications: SentNotifications = {
+      elements: this.sent_notifications.length,
+      starts_at: attempt_starts_at,
+      ends_at: attempt_ends_at,
+      notifications: this.notifications_to_send
+    };
 
-    // this.closseLoading();
+    // CONVERTIR A ASINCRONO
+    await this.logsService.saveNotificationLogs(sent_notifications);
 
-   /* if (this.not_set_notifications.length>0) {
-        console.log('Hay otificaciones sin enviar en el array');
-    }*/
 
     console.log('En este punto ya debiern haberse enviado TODAS las notificaciones');
 
+    /*console.log('Hora de comienzo: ', attempt_starts_at);
+    console.log('Hora de termino: ', attempt_ends_at);
+
     console.log('Array de notificaciones enviadas: ', this.sent_notifications);
-    console.log('Array de notificaciones NO enviadas: ', this.not_set_notifications);
+    console.log('Array de notificaciones NO enviadas: ', this.not_set_notifications);*/
 
 
 
@@ -167,14 +143,14 @@ export class SelectNotificationsComponent implements OnInit {
           console.timeEnd('loop');
           if (wasSent) {
               notification.wasSent = true;
-              notification.sentTime = moment().format('LT');
+              notification.sentTime = moment().format('LTS');
               sent_n.push(notification);
               this.presentToast('Notificación numero '+nNot+' fue enviado con exito');
               console.log('Mensaje '+nNot+' fue enviado');
           } else {
               notification.wasSent = false;
               // this.not_set_notifications.push(notification);
-              notification.sentTime = moment().format('LT');
+              notification.sentTime = moment().format('LTS');
               not_sent_n.push(notification);
               this.presentToast('Se produjo un error al intentar enviar la notificación numero '+nNot);
               console.log('Mensaje '+nNot+' NO fue enviado');
@@ -213,19 +189,8 @@ export class SelectNotificationsComponent implements OnInit {
           })
       }
 
-      /*
-
-      AQUI VA EL CODIGO PARA COMBINAR LOS DOS ARRAYS EN UNO SOLO PARALAS NOTIFICACIONES
-      ESTO VA A SER EN LUGAR DE           this.sent_notifications.push(notification);
-
-      VAS A UTILIZAR UNO O DOS FOREACH Y LO VAS A RETORNAR EN ESTA FUNCION (SI NO INTERFIERE
-      CON LA RECURSIVIDAD) PARA ASOCIAR LA FUNCION A UN ARRAY CON LAS NOTIFICACIONES Y GUARDARLAS
-      EN EL STORAGE MÁS FACIL
-
-      */
-
-
   }
+
 
   selectAll($event) {
     console.log('Entrí a la función selectAll: ', $event);

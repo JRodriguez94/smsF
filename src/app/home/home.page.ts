@@ -19,6 +19,7 @@ import {ModalService} from "../_services/modal.service";
 import {UtilitiesService} from "../_services/utilities.service";
 
 import { LoadingController } from '@ionic/angular';
+import {LogsService} from "../_services/logs.service";
 
 @Component({
   selector: 'app-home',
@@ -56,7 +57,8 @@ export class HomePage {
       private alertsService: AlertsService,
       private modalService: ModalService,
       private utilitiesService: UtilitiesService,
-      public loadingController: LoadingController
+      public loadingController: LoadingController,
+      private logsService: LogsService,
       ) {
   /*  console.log('Moment(?', moment().format('LT'));
     this.sent_successfully_notifications2 = this.notificacionesProvider.sent;
@@ -280,14 +282,6 @@ export class HomePage {
 
   // TEMP TEST AREA
 
-
-
-  perro() {
-    this.presentLoading();
-    setTimeout(() => {
-      this.closseLoading();
-    }, 10000)
-  }
 
   async presentLoading() {
      this.loading = await this.loadingController.create({

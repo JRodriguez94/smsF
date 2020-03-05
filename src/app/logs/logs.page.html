@@ -8,4 +8,65 @@
 
 <ion-content>
 
+  <h2 class="title">Historial</h2>
+
+    <!--Expanción nivel - I-->
+  <mat-accordion>
+    <mat-expansion-panel *ngFor="let log of logs">
+
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Fecha: &nbsp; <strong class="date-color"> {{log.date}}</strong>
+        </mat-panel-title>
+        <mat-panel-description>
+          Intentos de hoy: &nbsp; <strong>{{log.todays_attempts}}</strong>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <!--Expanción nivel - II-->
+      <mat-accordion>
+        <mat-expansion-panel *ngFor="let sentNotifications of log.sent_notifications">
+
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Elementos: &nbsp; <strong class="elements-color">{{sentNotifications.elements}}</strong>
+            </mat-panel-title>
+            <mat-panel-description>
+              {{sentNotifications.starts_at}}&nbsp;/&nbsp;{{sentNotifications.ends_at}}
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <!--Expanción nivel - III-->
+          <mat-accordion>
+            <mat-expansion-panel *ngFor="let notification of sentNotifications.notifications">
+
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <strong *ngIf="!notification.wasSent" class="sent-notification-color">Enviado</strong>
+                  <strong *ngIf="notification.wasSent" class="not-sent-notification-color">No Enviado</strong>
+                </mat-panel-title>
+                <mat-panel-description>
+                  {{notification.telefono}}
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+
+                <label><strong class="message-titles">Estatus:</strong></label> &nbsp; <label *ngIf="!notification.wasSent" >Enviado</label> <label *ngIf="notification.wasSent">No Enviado</label> <br>
+                <label><strong class="message-titles">Telefono:</strong></label> &nbsp; <label>{{notification.telefono}}</label> <br>
+                <label><strong class="message-titles">Hora de intento de envio:</strong></label> &nbsp; <label>{{notification.sentTime}}</label> <br>
+                <label><strong class="message-titles">Mensaje:</strong></label> <br> <p>{{notification.mensaje}}</p>
+
+            </mat-expansion-panel>
+          </mat-accordion>
+          <!--Expanción nivel END - III-->
+
+        </mat-expansion-panel>
+      </mat-accordion>
+      <!--Expanción nivel END - II-->
+
+    </mat-expansion-panel>
+  </mat-accordion>
+  <!--Expanción nivel END - I-->
+
+
+
 </ion-content>

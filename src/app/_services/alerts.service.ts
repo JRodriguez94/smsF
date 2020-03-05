@@ -9,12 +9,19 @@ export class AlertsService {
 
   constructor( private alertController: AlertController ) { }
 
-
-  async presentSimpleAlert(header: string, subheader: string, messaje: string) {
+    /*
+    * @author: Josue Rodriguez <josue@Fiducia.com.mx>
+    * @inputs: header: string, subheader: string, message: string
+    * @output: none
+    * @description: Se declara la constante alert que es igualada al metodo create del alertController
+    * que a su ves, utiliza los parametros de entrada (header, subheader y message) para crear el alert.
+    * Finalmente, mediante la constante alert declarada, se invoca el metodo present() para visualizar el componente.
+    * */
+  async presentSimpleAlert(header: string, subheader: string, message: string) {
     const alert = await this.alertController.create({
       header: header,
       subHeader: subheader,
-      message: messaje,
+      message: message,
       buttons: ['OK']
     });
 
@@ -47,6 +54,19 @@ export class AlertsService {
     await confirmationalert.present();
   }*/
 
+
+    /*
+   * @author: Josue Rodriguez <josue@Fiducia.com.mx>
+   * @inputs: header: string, message: string
+   * @output: promise: promise (boolean)
+   * @description: Se declara resolveFunction (resolver) del tipo boolean inicializado en void.
+   * se declara la constante promise del tipo promise que retorna un dato boolean, el cual es obtenido
+   * mediante resolveFunction declarada anteriormente.
+   * Se declara la constante alert que se iguala al metodo create() del alertController, la cual usa
+   * los parametros de entrada (header y message) para contruir el alert, así como dos botones (Cancelar y Aceptar)
+   * los cuales, dependiedo de cual sea precionado, se asignará el valor del resolver.
+   * Finalmente, se presenta el alert y se retorna promise.
+   * */
  async confirmationAlert(header: string, message: string): Promise<boolean> {
     let resolveFunction: (confirm: boolean) => void;
     const promise = new Promise<boolean>(resolve => {
@@ -71,6 +91,18 @@ export class AlertsService {
     return promise;
   }
 
+    /*
+   * @author: Josue Rodriguez <josue@Fiducia.com.mx>
+   * @inputs: header: string, message: string
+   * @output: promise: promise (boolean)
+   * @description: Se declara resolveFunction (resolver) del tipo boolean inicializado en void.
+   * se declara la constante promise del tipo promise que retorna un dato boolean, el cual es obtenido
+   * mediante resolveFunction declarada anteriormente.
+   * Se declara la constante alert que se iguala al metodo create() del alertController, la cual usa
+   * los parametros de entrada (header y message) para contruir el alert, así como dos botones (Ver Logs y Aceptar)
+   * los cuales, dependiedo de cual sea precionado, se asignará el valor del resolver.
+   * Finalmente, se presenta el alert y se retorna promise.
+   * */
  async logsConfirmationAlert(header: string, message: string): Promise<boolean> {
     let resolveFunction: (confirm: boolean) => void;
     const promise = new Promise<boolean>(resolve => {

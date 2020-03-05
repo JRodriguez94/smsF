@@ -10,19 +10,36 @@ import {UtilitiesService} from "./utilities.service";
 export class SmsService {
 
 
-  logsAr: notificationL[] = [];
+  // logsAr: notificationL[] = [];
 
   constructor(
       private sms: SMS,
       private utilitiesService: UtilitiesService
   ) { }
 
-
+  /*
+   * @author: Josue Rodriguez
+   * @parameters: number: string, message: string
+   * @returns: Promise: promise
+   * @Description: Envia un mensaje de texto con los datos
+   * que llegan como paraetros (number, message) y devuelve
+   * una promesa.
+   * */
   sendSMS(number: string, message: string) {
     return this.sms.send(number, message);
   }
 
-
+  /*
+  * @author: Josue Rodriguez
+  * @parameters: number: string, message: string
+  * @returns: Promise: boolean
+  * @Description: Envia mensajes de texto al numero que lega como parametro,
+  * así como se usa el message como cuerpo del mensaje.
+  * Esto se hace de forma asincrona con un interbalo de tiempo de 5 a 16 segundos
+  * entre cada intento de envio.
+  * Finalmente retorna un valor booleano como parte de la promesa, dependiendo
+  * si el mensaje fue enviado con exito o no.
+  * */
   async sendSMSasync(number: string, message: string): Promise<boolean> {
 
       // console.time('loop');
@@ -46,7 +63,7 @@ export class SmsService {
 
 
 
-   sendMultiSMS(notifications: Notification[]): notificationL[] {
+   /*sendMultiSMS(notifications: Notification[]): notificationL[] {
 
     let nNot = 0;
     notifications.forEach(async (notification, i) => {
@@ -59,15 +76,15 @@ export class SmsService {
 
     console.log('Ya pasó el foreach');
     return this.logsAr;
-  }
+  }*/
 
 
 }
 
 
-class notificationL {
+/*class notificationL {
   number: string;
   message: string;
   time: string;
   status: string;
-}
+}*/

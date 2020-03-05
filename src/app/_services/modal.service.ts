@@ -7,7 +7,7 @@ import {NotificationsModalPage} from "../_components/modals/notifications-modal/
 })
 export class ModalService {
 
-  dataReturned:any;
+  // dataReturned:any;
 
   notificationSelectModal: any;
 
@@ -16,6 +16,14 @@ export class ModalService {
 
   ) { }
 
+  /*
+* @author: Josue Rodriguez <josue@Fiducia.com.mx>
+* @inputs: none
+* @output: promise
+* @description: Invoca el metodo create del modalController, pasando como componente NotificationsModalPage
+* y la clase wideModal el cual carga los estlos.
+* Retorna el metodo present del notificationSelectModal como promesa.
+* */
   async openModal() {
     this.notificationSelectModal = await this.modalController.create({
       component: NotificationsModalPage,
@@ -32,7 +40,12 @@ export class ModalService {
     return await this.notificationSelectModal.present();
   }
 
-
+  /*
+  * @author: Josue Rodriguez <josue@Fiducia.com.mx>
+  * @inputs: none
+  * @output: none
+  * @description: Cierra el modal activo.
+  * */
   closeModal() {
     this.notificationSelectModal.dismiss();
   }

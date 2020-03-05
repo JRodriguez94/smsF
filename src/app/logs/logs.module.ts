@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { LogsPageRoutingModule } from './logs-routing.module';
 
 import { LogsPage } from './logs.page';
+import {AppMaterialModule} from "../app-material.module";
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    LogsPageRoutingModule
+    LogsPageRoutingModule,
+    AppMaterialModule
   ],
   declarations: [LogsPage]
 })

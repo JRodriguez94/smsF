@@ -15,6 +15,8 @@ import { SMS } from '@ionic-native/sms/ngx';
 import {NotificationsModalPageModule} from "./_components/modals/notifications-modal/notifications-modal.module";
 
 import { IonicStorageModule } from '@ionic/storage';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {AppMaterialModule} from "./app-material.module";
 
 
 
@@ -31,7 +33,8 @@ import { IonicStorageModule } from '@ionic/storage';
     AppRoutingModule,
     HttpClientModule,
     NotificationsModalPageModule,
-    IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot(),
+    BrowserAnimationsModule,
   ],
   providers: [
     StatusBar,
